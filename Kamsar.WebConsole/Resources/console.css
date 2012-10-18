@@ -1,0 +1,70 @@
+﻿body {
+    font-family: Helvetica, 'Trebuchet MS', sans-serif;
+}
+
+.wrapper {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.progress {
+
+}
+    .progress h2 {
+        margin-bottom: 0.1em;
+    }
+
+    .progress p#status {
+        color: gray;
+        font-style: italic;
+        margin-top: 0.1em;
+        font-size: 0.9em;
+    }
+
+.progressbar {
+    font-size: 1.5em;
+    width: 100%;
+    height: 1.1em;
+    background-color: white;
+    border: 2px solid black;
+    text-align: center;
+}
+
+    .progressbar #bar {
+        background-color: #0080FF;
+        display: block;
+        float: left;
+        height: 1.1em;
+        width: 0%;
+        border-right: 1px solid black;
+    }
+
+    .progressbar #percentage {
+        position: absolute;
+        left: 40%;
+        right: 40%;
+        text-align: center;
+    }
+
+#console {
+    background-color: black;
+    color: #0F0;
+    font-family: Consolas, monospace;
+    height: 30em;
+    overflow: auto;
+    padding: 0.5em;
+}
+
+    #console .error {
+        color: red;
+        font-weight: bold;
+    }
+
+    #console .warning {
+        color: #FF8000;
+    }
+
+    #console .debug {
+        color: #FFF;
+    }
