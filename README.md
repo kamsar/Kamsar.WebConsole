@@ -15,6 +15,7 @@ There are three primary components:
 * Implement required abstract methods
 * During execution of your Process() method, utilize the status updating methods (SetProgress, SetProgressStatus, and WriteConsole/WriteConsoleLine) to follow what you're doing.
 * The page will update status in real-time as your processing runs
+* Note: any controls, markup, or content in the .aspx page will be ignored; the console takes over the rendering process. Only the @Page line is needed.
 
 See also the Kamsar.WebConsole.Samples project for an example of implementation.
 
