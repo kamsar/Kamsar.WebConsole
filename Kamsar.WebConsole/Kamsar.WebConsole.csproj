@@ -12,6 +12,7 @@
     <RootNamespace>Kamsar.WebConsole</RootNamespace>
     <AssemblyName>Kamsar.WebConsole</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ProjectGuid>{0B067AB0-984E-4781-93FE-FAB7919EE0CF}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,7 +45,9 @@
   <ItemGroup>
     <Compile Include="MessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebConsolePage.cs" />
+    <Compile Include="WebConsolePage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
