@@ -9,6 +9,11 @@ namespace Kamsar.WebConsole
 {
     public abstract class WebConsolePage : Page
     {
+		public WebConsolePage()
+		{
+			ExtraMessagePaddingLength = 128;
+		}
+
         private int _progress = 0;
 
         protected abstract void Process();
@@ -125,7 +130,16 @@ namespace Kamsar.WebConsole
         private void FlushScript(string script)
         {
             Response.Write(string.Format("<script>{0}</script>", script));
-            Response.Flush();
+			
+			var padding = new StringBuilder("<div style=\"display: none;\">");
+			var random = new Random();
+			for (int i = 0; i < ExtraMessagePaddingLength; i++)
+				padding.Append((char)random.Next(33, 126));
+
+			padding.Append("</div>");
+			Response.Write(padding);
+			
+			Response.Flush();
         }
 
         protected int Progress
@@ -135,5 +149,14 @@ namespace Kamsar.WebConsole
                 return _progress;
             }
         }
+
+		/// <summary>
+		/// Extra padding chars added to the end of each message sent to the page. Defeats gzip compression chunking preventing full flushing.
+		/// </summary>
+		protected int ExtraMessagePaddingLength
+		{
+			get;
+			set;
+		}
     }
 }
