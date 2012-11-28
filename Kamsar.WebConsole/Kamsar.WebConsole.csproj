@@ -43,10 +43,10 @@
     <EmbeddedResource Include="Resources\console.js" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MinimalWebConsole.cs" />
+    <Compile Include="WebConsole.cs" />
     <Compile Include="MessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebConsole.cs" />
+    <Compile Include="Html5WebConsole.cs" />
     <Compile Include="WebConsolePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>

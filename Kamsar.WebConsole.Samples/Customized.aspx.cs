@@ -11,41 +11,38 @@ namespace Kamsar.WebConsole.Samples
 	{
 		protected void Page_Load(object sender, EventArgs e)
 		{
-			var processor = new MinimalWebConsole(new HttpResponseWrapper(Response));
+			var console = new WebConsole(Response);
 
 			// emit JS/CSS
-			processor.RenderResources();
+			console.RenderResources();
 
 			Response.Write("<div class=\"wrapper\">");
 
 			// emit console on top
-			processor.RenderConsole();
+			console.RenderConsole();
 
 			// emit progress at the bottom
-			processor.RenderProgressBar();
+			console.RenderProgressBar();
 
 			Response.Write("</div>");
 
-			processor.Render(console =>
+			console.WriteLine("Starting WebForms custom demonstration...");
+
+			for (int i = 0; i <= 100; i++)
 			{
-				console.WriteLine("Starting WebForms custom demonstration...");
+				// slight delay to see loading time
+				System.Threading.Thread.Sleep(50);
 
-				for (int i = 0; i <= 100; i++)
-				{
-					// slight delay to see loading time
-					System.Threading.Thread.Sleep(50);
+				// advance the progress bar status (you can use x % as well as x of y total items)
+				console.SetProgress(i);
 
-					// advance the progress bar status (you can use x % as well as x of y total items)
-					console.SetProgress(i);
+				// demonstrate setting a substatus of the progress bar (e.g. "making database backup")
+				if (i % 10 == 0) console.SetProgressStatus(string.Format("{0}/{1}", i, 100));
 
-					// demonstrate setting a substatus of the progress bar (e.g. "making database backup")
-					if (i % 10 == 0) console.SetProgressStatus(string.Format("{0}/{1}", i, 100));
+				console.WriteLine("At {0}%", console.Progress);
+			}
 
-					console.WriteLine("At {0}%", console.Progress);
-				}
-
-				console.SetProgressStatus("WebForms demo complete.");
-			});
+			console.SetProgressStatus("WebForms demo complete.");
 		}
 	}
 }

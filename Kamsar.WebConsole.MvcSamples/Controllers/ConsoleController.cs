@@ -10,7 +10,7 @@ namespace Kamsar.WebConsole.MvcSamples.Controllers
     {
         public ActionResult Demo()
         {
-			var processor = new WebConsole(Response);
+			var processor = new Html5WebConsole(Response);
 
 			processor.Title = "MVC Demo";
 
