@@ -68,6 +68,18 @@
         font-weight: bold;
     }
 
+		#console .error .stacktrace
+		{
+			color: gray;
+			font-size: 0.8em;
+		}
+
+		#console .error .innerexception
+		{
+			margin-left: 2em;
+			color: red;
+		}
+
     #console .warning {
         color: #FF8000;
     }

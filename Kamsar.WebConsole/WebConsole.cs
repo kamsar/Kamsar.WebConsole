@@ -104,7 +104,7 @@ namespace Kamsar.WebConsole
             html.AppendFormat(statusMessage, formatParameters);
             html.AppendFormat("</span>");
 
-            FlushScript(string.Format("CS.WriteConsole({0});", HttpUtility.JavaScriptStringEncode(html.ToString(), true)));
+            WriteScript(string.Format("CS.WriteConsole({0});", HttpUtility.JavaScriptStringEncode(html.ToString(), true)));
         }
 
 		/// <summary>
@@ -128,17 +128,46 @@ namespace Kamsar.WebConsole
 		/// </summary>
 		public void WriteException(Exception exception)
 		{
-			WriteLine("ERROR: {0}", MessageType.Error, exception.GetType().Name);
-			WriteLine(exception.Message, MessageType.Error);
-			WriteLine(exception.StackTrace.Replace("\n", "<br />"), MessageType.Debug);
+			StringBuilder exMessage = new StringBuilder();
+			exMessage.AppendFormat("ERROR: {0} ({1})", exception.Message, exception.GetType().FullName);
+			exMessage.Append("<div class=\"stacktrace\">");
+
+			if (exception.StackTrace != null)
+				exMessage.Append(exception.StackTrace.Trim().Replace("\n", "<br />"));
+			else
+				exMessage.Append("No stack trace available.");
+
+			exMessage.Append("</div>");
+
+			WriteInnerException(exception.InnerException, exMessage);
+
+			WriteLine(exMessage.ToString(), MessageType.Error);
+		}
+
+		private static void WriteInnerException(Exception innerException, StringBuilder exMessage)
+		{
+			if (innerException == null) return;
+
+			exMessage.Append("<div class=\"innerexception\">");
+			exMessage.AppendFormat("{0} ({1})", innerException.Message, innerException.GetType().FullName);
+			exMessage.Append("<div class=\"stacktrace\">");
+
+			if (innerException.StackTrace != null)
+				exMessage.Append(innerException.StackTrace.Trim().Replace("\n", "<br />"));
+			else
+				exMessage.Append("No stack trace available.");
+
+			WriteInnerException(innerException.InnerException, exMessage);
+
+			exMessage.Append("</div>");
 		}
 
 		/// <summary>
 		/// Writes a progress status message to the status line beneath the progress bar.
 		/// </summary>
-		public void SetProgressStatus(string statusMessage, params string[] formatParameters)
+		public void SetProgressStatus(string statusMessage, params object[] formatParameters)
         {
-            FlushScript(string.Format("CS.SetStatus({0});", HttpUtility.JavaScriptStringEncode(string.Format(statusMessage, formatParameters), true)));
+            WriteScript(string.Format("CS.SetStatus({0});", HttpUtility.JavaScriptStringEncode(string.Format(statusMessage, formatParameters), true)));
         }
 
 		/// <summary>
@@ -148,9 +177,11 @@ namespace Kamsar.WebConsole
         {
             if (percent < 0 || percent > 100) throw new ArgumentException("Invalid percentage");
 
+			if (percent == _progress) return;
+
             _progress = percent;
 
-            FlushScript(string.Format("CS.SetProgress({0});", _progress));
+            WriteScript(string.Format("CS.SetProgress({0});", _progress));
         }
 
 		/// <summary>
@@ -195,7 +226,10 @@ namespace Kamsar.WebConsole
 			SetProgress(Math.Min(startPercentage + offset, 100));
 		}
 
-        private void FlushScript(string script)
+		/// <summary>
+		/// Writes and executes a JavaScript statement on the console page. You don't need script tags, only JS content.
+		/// </summary>
+        public void WriteScript(string script)
         {
             _response.Write(string.Format("<script>{0}</script>", script));
 			
