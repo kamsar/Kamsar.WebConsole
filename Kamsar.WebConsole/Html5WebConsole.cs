@@ -47,7 +47,7 @@ namespace Kamsar.WebConsole
 		{
 			if (!string.IsNullOrEmpty(Title))
 			{
-				_response.Write(string.Format("<h1>{0}</h1>", Title));
+				_response.Write(string.Format("<h1>{0}</h1>", HttpUtility.HtmlEncode(Title)));
 			}
 		}
 
