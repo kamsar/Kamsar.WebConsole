@@ -27,6 +27,9 @@ namespace Kamsar.WebConsole
 
 		public string Title { get; set; }
 
+		/// <summary>
+		/// Renders content into the <head>
+		/// </summary>
         protected virtual void RenderHead()
         {
 			if (!string.IsNullOrEmpty(Title))
@@ -37,12 +40,23 @@ namespace Kamsar.WebConsole
 			RenderResources();
         }
 
-		public override void Render()
+		/// <summary>
+		/// Renders heading content into the page (e.g. a <h1> of the title, etc)
+		/// </summary>
+		protected virtual void RenderPageHead()
 		{
-			throw new NotImplementedException("Use the overload with the process action to place your console output at a proper location in the page.");
+			if (!string.IsNullOrEmpty(Title))
+			{
+				_response.Write(string.Format("<h1>{0}</h1>", Title));
+			}
 		}
 
-		public void Render(Action<WebConsole> processAction)
+		public override void Render()
+		{
+			throw new NotImplementedException("Use the overload with the process action to place your console output at a proper location in the markup.");
+		}
+
+		public virtual void Render(Action<WebConsole> processAction)
         {
 			_response.Write("<!DOCTYPE html>");
 
@@ -55,10 +69,7 @@ namespace Kamsar.WebConsole
 			_response.Write("<body>");
 			_response.Write("<div class=\"wrapper\">");
 
-			if (!string.IsNullOrEmpty(Title))
-			{
-				_response.Write(string.Format("<h1>{0}</h1>", Title));
-			}
+			RenderPageHead();
 
 			base.Render();
 
