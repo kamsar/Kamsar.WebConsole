@@ -36,7 +36,7 @@ namespace Kamsar.WebConsole
 		/// <summary>
 		/// Renders the required CSS and JS for the WebConsole. Resources are stored as WebResources.
 		/// </summary>
-		public void RenderResources()
+		public virtual void RenderResources()
 		{
 			var page = new Page();
 			_response.Write(string.Format("<link rel=\"stylesheet\" href=\"{0}\" />", page.ClientScript.GetWebResourceUrl(typeof(WebConsolePage), "Kamsar.WebConsole.Resources.console.css")));
@@ -96,7 +96,7 @@ namespace Kamsar.WebConsole
 		/// <summary>
 		/// Writes a message to the WebConsole's console output
 		/// </summary>
-		public void Write(string statusMessage, MessageType type, params object[] formatParameters)
+		public virtual void Write(string statusMessage, MessageType type, params object[] formatParameters)
         {
             StringBuilder html = new StringBuilder();
 
@@ -112,13 +112,13 @@ namespace Kamsar.WebConsole
 		/// </summary>
 		public void WriteLine(string statusMessage, params object[] formatParameters)
         {
-            Write(statusMessage + "<br />", formatParameters);
+            WriteLine(statusMessage, MessageType.Info, formatParameters);
         }
 
 		/// <summary>
 		/// Writes a message, followed by an end-line, to the WebConsole's console output
 		/// </summary>
-		public void WriteLine(string statusMessage, MessageType type, params object[] formatParameters)
+		public virtual void WriteLine(string statusMessage, MessageType type, params object[] formatParameters)
         {
             Write(statusMessage + "<br />", type, formatParameters);
         }
@@ -126,7 +126,7 @@ namespace Kamsar.WebConsole
 		/// <summary>
 		/// Writes an exception to the WebConsole's console output. Execution continues after the write completes.
 		/// </summary>
-		public void WriteException(Exception exception)
+		public virtual void WriteException(Exception exception)
 		{
 			StringBuilder exMessage = new StringBuilder();
 			exMessage.AppendFormat("ERROR: {0} ({1})", exception.Message, exception.GetType().FullName);
@@ -165,7 +165,7 @@ namespace Kamsar.WebConsole
 		/// <summary>
 		/// Writes a progress status message to the status line beneath the progress bar.
 		/// </summary>
-		public void SetProgressStatus(string statusMessage, params object[] formatParameters)
+		public virtual void SetProgressStatus(string statusMessage, params object[] formatParameters)
         {
             WriteScript(string.Format("CS.SetStatus({0});", HttpUtility.JavaScriptStringEncode(string.Format(statusMessage, formatParameters), true)));
         }
@@ -173,7 +173,7 @@ namespace Kamsar.WebConsole
 		/// <summary>
 		/// Sets the percentage complete display
 		/// </summary>
-		public void SetProgress(int percent)
+		public virtual void SetProgress(int percent)
         {
             if (percent < 0 || percent > 100) throw new ArgumentException("Invalid percentage");
 
@@ -187,7 +187,7 @@ namespace Kamsar.WebConsole
 		/// <summary>
 		/// Sets the percentage complete display, given a proportion of completeness
 		/// </summary>
-        public void SetProgress(long itemsProcessed, long totalItems)
+        public virtual void SetProgress(long itemsProcessed, long totalItems)
         {
             SetProgress((int)Math.Round(((double)itemsProcessed / (double)totalItems) * 100d));
         }
@@ -198,7 +198,7 @@ namespace Kamsar.WebConsole
 		/// <param name="taskNumber">The index of the current sub-task</param>
 		/// <param name="totalTasks">The total number of sub-tasks</param>
 		/// <param name="taskPercent">The percentage complete of the sub-task (0-100)</param>
-		public void SetTaskProgress(int taskNumber, int totalTasks, int taskPercent)
+		public virtual void SetTaskProgress(int taskNumber, int totalTasks, int taskPercent)
 		{
 			if (taskNumber < 1) throw new ArgumentException("taskNumber must be 1 or more");
 			if (totalTasks < 1) throw new ArgumentException("totalTasks must be 1 or more");
@@ -216,7 +216,7 @@ namespace Kamsar.WebConsole
 		/// <param name="startPercentage">The percentage the task began at</param>
 		/// <param name="endPercentage">The percentage the task ends at</param>
 		/// <param name="taskPercent">The percentage complete of the sub-task (0-100)</param>
-		public void SetRangeTaskProgress(int startPercentage, int endPercentage, int taskPercent)
+		public virtual void SetRangeTaskProgress(int startPercentage, int endPercentage, int taskPercent)
 		{
 			int range = endPercentage - startPercentage;
 
@@ -230,7 +230,7 @@ namespace Kamsar.WebConsole
 		/// <summary>
 		/// Writes and executes a JavaScript statement on the console page. You don't need script tags, only JS content.
 		/// </summary>
-        public void WriteScript(string script)
+        public virtual void WriteScript(string script)
         {
             _response.Write(string.Format("<script>{0}</script>", script));
 			
