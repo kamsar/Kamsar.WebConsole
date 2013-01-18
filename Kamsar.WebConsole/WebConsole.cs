@@ -98,11 +98,16 @@ namespace Kamsar.WebConsole
 		/// </summary>
 		public virtual void Write(string statusMessage, MessageType type, params object[] formatParameters)
         {
-            StringBuilder html = new StringBuilder();
+            var html = new StringBuilder();
 
             html.AppendFormat("<span class=\"{0}\">", type.ToString().ToLowerInvariant());
-            html.AppendFormat(statusMessage, formatParameters);
-            html.AppendFormat("</span>");
+			
+			if (formatParameters.Length > 0)
+				html.AppendFormat(statusMessage, formatParameters);
+			else
+				html.Append(statusMessage);
+
+            html.Append("</span>");
 
             WriteScript(string.Format("CS.WriteConsole({0});", HttpUtility.JavaScriptStringEncode(html.ToString(), true)));
         }
@@ -128,7 +133,7 @@ namespace Kamsar.WebConsole
 		/// </summary>
 		public virtual void WriteException(Exception exception)
 		{
-			StringBuilder exMessage = new StringBuilder();
+			var exMessage = new StringBuilder();
 			exMessage.AppendFormat("ERROR: {0} ({1})", exception.Message, exception.GetType().FullName);
 			exMessage.Append("<div class=\"stacktrace\">");
 
@@ -166,8 +171,11 @@ namespace Kamsar.WebConsole
 		/// Writes a progress status message to the status line beneath the progress bar.
 		/// </summary>
 		public virtual void SetProgressStatus(string statusMessage, params object[] formatParameters)
-        {
-            WriteScript(string.Format("CS.SetStatus({0});", HttpUtility.JavaScriptStringEncode(string.Format(statusMessage, formatParameters), true)));
+		{
+			string status = statusMessage;
+			if (formatParameters.Length > 0) status = string.Format(statusMessage, formatParameters);
+
+            WriteScript(string.Format("CS.SetStatus({0});", HttpUtility.JavaScriptStringEncode(status, true)));
         }
 
 		/// <summary>
