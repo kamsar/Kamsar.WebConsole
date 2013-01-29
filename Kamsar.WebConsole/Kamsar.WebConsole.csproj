@@ -43,6 +43,8 @@
     <EmbeddedResource Include="Resources\console.js" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TextProgressStatus.cs" />
+    <Compile Include="IProgressStatus.cs" />
     <Compile Include="NullWebConsole.cs" />
     <Compile Include="RemoteWebConsole.cs" />
     <Compile Include="RemoteWebConsoleReceiver.cs" />
@@ -54,6 +56,7 @@
     <Compile Include="WebConsolePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="WebConsoleTaskProgressStatus.cs" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

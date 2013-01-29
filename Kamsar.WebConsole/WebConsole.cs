@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 using System.Web;
 using System.Web.UI;
@@ -131,6 +132,8 @@ namespace Kamsar.WebConsole
 		/// </summary>
 		public virtual void WriteException(Exception exception)
 		{
+			if(Debugger.IsAttached) Debugger.Break();
+
 			var exMessage = new StringBuilder();
 			exMessage.AppendFormat("ERROR: {0} ({1})", exception.Message, exception.GetType().FullName);
 			exMessage.Append("<div class=\"stacktrace\">");
