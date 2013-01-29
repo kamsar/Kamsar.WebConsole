@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.UI;
@@ -12,10 +10,10 @@ namespace Kamsar.WebConsole
 	/// </summary>
 	public class WebConsole
 	{
-		private HttpResponseBase _response;
-		bool _resourcesRendered = false;
-		bool _progressRendered = false;
-		bool _consoleRendered = false;
+		private readonly HttpResponseBase _response;
+		bool _resourcesRendered;
+		bool _progressRendered;
+		bool _consoleRendered;
 
 		public WebConsole(HttpResponseBase response)
 		{
@@ -31,7 +29,7 @@ namespace Kamsar.WebConsole
 		{
 		}
 
-        private int _progress = 0;
+        private int _progress;
 
 		/// <summary>
 		/// Renders the required CSS and JS for the WebConsole. Resources are stored as WebResources.
@@ -195,9 +193,9 @@ namespace Kamsar.WebConsole
 		/// <summary>
 		/// Sets the percentage complete display, given a proportion of completeness
 		/// </summary>
-        public virtual void SetProgress(long itemsProcessed, long totalItems)
+        public void SetProgress(long itemsProcessed, long totalItems)
         {
-            SetProgress((int)Math.Round(((double)itemsProcessed / (double)totalItems) * 100d));
+            SetProgress((int)Math.Round((itemsProcessed / (double)totalItems) * 100d));
         }
 
 		/// <summary>
@@ -206,14 +204,14 @@ namespace Kamsar.WebConsole
 		/// <param name="taskNumber">The index of the current sub-task</param>
 		/// <param name="totalTasks">The total number of sub-tasks</param>
 		/// <param name="taskPercent">The percentage complete of the sub-task (0-100)</param>
-		public virtual void SetTaskProgress(int taskNumber, int totalTasks, int taskPercent)
+		public void SetTaskProgress(int taskNumber, int totalTasks, int taskPercent)
 		{
 			if (taskNumber < 1) throw new ArgumentException("taskNumber must be 1 or more");
 			if (totalTasks < 1) throw new ArgumentException("totalTasks must be 1 or more");
 			if (taskNumber > totalTasks) throw new ArgumentException("taskNumber was greater than the number of totalTasks!");
 
 			int start = (int)Math.Round(((taskNumber-1) / (double)totalTasks) * 100d);
-			int end = start + (int)Math.Round((1d / (double)totalTasks) * 100d);
+			int end = start + (int)Math.Round((1d / totalTasks) * 100d);
 
 			SetRangeTaskProgress(Math.Max(start, 0), Math.Min(end, 100), taskPercent);
 		}
@@ -224,7 +222,7 @@ namespace Kamsar.WebConsole
 		/// <param name="startPercentage">The percentage the task began at</param>
 		/// <param name="endPercentage">The percentage the task ends at</param>
 		/// <param name="taskPercent">The percentage complete of the sub-task (0-100)</param>
-		public virtual void SetRangeTaskProgress(int startPercentage, int endPercentage, int taskPercent)
+		public void SetRangeTaskProgress(int startPercentage, int endPercentage, int taskPercent)
 		{
 			int range = endPercentage - startPercentage;
 

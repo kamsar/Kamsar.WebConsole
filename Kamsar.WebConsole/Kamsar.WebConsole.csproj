@@ -43,6 +43,10 @@
     <EmbeddedResource Include="Resources\console.js" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NullWebConsole.cs" />
+    <Compile Include="RemoteWebConsole.cs" />
+    <Compile Include="RemoteWebConsoleReceiver.cs" />
+    <Compile Include="TextWebConsole.cs" />
     <Compile Include="WebConsole.cs" />
     <Compile Include="MessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

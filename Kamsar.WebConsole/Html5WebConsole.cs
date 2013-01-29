@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Web;
-using System.Web.UI;
 
 namespace Kamsar.WebConsole
 {
@@ -12,7 +8,7 @@ namespace Kamsar.WebConsole
 	/// </summary>
 	public class Html5WebConsole : WebConsole
 	{
-		HttpResponseBase _response;
+		readonly HttpResponseBase _response;
 
 		public Html5WebConsole(HttpResponseBase response) : base(response)
 		{
@@ -28,7 +24,7 @@ namespace Kamsar.WebConsole
 		public string Title { get; set; }
 
 		/// <summary>
-		/// Renders content into the <head>
+		/// Renders content into the head tag
 		/// </summary>
         protected virtual void RenderHead()
         {
@@ -41,7 +37,7 @@ namespace Kamsar.WebConsole
         }
 
 		/// <summary>
-		/// Renders heading content into the page (e.g. a <h1> of the title, etc)
+		/// Renders heading content into the page (e.g. a h1 of the title, etc)
 		/// </summary>
 		protected virtual void RenderPageHead()
 		{
