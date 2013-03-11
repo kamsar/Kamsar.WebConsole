@@ -14,6 +14,11 @@ namespace Kamsar.WebConsole
 		void Report(int percent);
 
 		/// <summary>
+		/// The current progress, in percent, of this progress status instance
+		/// </summary>
+		int Progress { get; }
+
+		/// <summary>
 		/// Reports an exception occurred while running the task.
 		/// </summary>
 		void ReportException(Exception exception);

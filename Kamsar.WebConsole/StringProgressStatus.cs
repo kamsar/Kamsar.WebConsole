@@ -14,7 +14,8 @@ namespace Kamsar.WebConsole
 	{
 		readonly StringBuilder _output = new StringBuilder();
 		readonly StringBuilder _errors = new StringBuilder();
-		readonly StringBuilder _warnings = new StringBuilder();	
+		readonly StringBuilder _warnings = new StringBuilder();
+		int _progressPercent;
 
 		public void ReportException(Exception exception)
 		{
@@ -63,7 +64,7 @@ namespace Kamsar.WebConsole
 		
 		public void Report(int percent)
 		{
-			// do nothing
+			_progressPercent = percent;
 		}
 
 		public void ReportTransientStatus(string statusMessage, params object[] formatParameters)
@@ -88,6 +89,8 @@ namespace Kamsar.WebConsole
 
 		public bool HasErrors { get { return _errors.Length > 0; } }
 		public bool HasWarnings { get { return _warnings.Length > 0; } }
+
+		public int Progress { get { return _progressPercent; } }
 
 		private static void WriteInnerException(Exception innerException, StringBuilder exMessage)
 		{

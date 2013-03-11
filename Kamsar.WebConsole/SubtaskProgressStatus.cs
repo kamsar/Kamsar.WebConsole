@@ -28,6 +28,7 @@ namespace Kamsar.WebConsole
 		Timer _heartbeat;
 		DateTime _startTime;
 		readonly string _taskName;
+		int _progress;
 
 
 		/// <summary>
@@ -99,8 +100,11 @@ namespace Kamsar.WebConsole
 			SetProgress(100);
 		}
 
+		public int Progress { get { return _progress; } }
+
 		private void SetProgress(int taskProgress)
 		{
+			_progress = taskProgress;
 			SetTaskProgress(_subtaskIndex, _subtaskCount, taskProgress);
 			if (taskProgress == 100)
 			{
