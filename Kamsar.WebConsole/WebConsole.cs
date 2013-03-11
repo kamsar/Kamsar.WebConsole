@@ -9,20 +9,34 @@ namespace Kamsar.WebConsole
 	/// <summary>
 	/// Implements a basic WebConsole in HTML snippets. When using this class you're responsible for wrapping HTML and making sure the console output is emitted at a proper location.
 	/// </summary>
-	public class WebConsole
+	public class WebConsole : IProgressStatus
 	{
 		private readonly HttpResponseBase _response;
 		bool _resourcesRendered;
 		bool _progressRendered;
 		bool _consoleRendered;
 
-		public WebConsole(HttpResponseBase response)
+		public WebConsole(HttpResponseBase response, bool forceBuffer)
 		{
 			_response = response;
-			_response.Buffer = false;
-			_response.BufferOutput = false;
+
+			if (forceBuffer)
+			{
+				_response.Buffer = false;
+				_response.BufferOutput = false;
+			}
 
 			ExtraMessagePaddingLength = 128;
+		}
+
+		public WebConsole(HttpResponse response, bool forceBuffer)
+			: this(new HttpResponseWrapper(response), forceBuffer)
+		{
+		}
+
+		public WebConsole(HttpResponseBase response)
+			: this(response, true)
+		{
 		}
 
 		public WebConsole(HttpResponse response)
@@ -132,8 +146,6 @@ namespace Kamsar.WebConsole
 		/// </summary>
 		public virtual void WriteException(Exception exception)
 		{
-			if(Debugger.IsAttached) Debugger.Break();
-
 			var exMessage = new StringBuilder();
 			exMessage.AppendFormat("ERROR: {0} ({1})", exception.Message, exception.GetType().FullName);
 			exMessage.Append("<div class=\"stacktrace\">");
@@ -148,6 +160,8 @@ namespace Kamsar.WebConsole
 			WriteInnerException(exception.InnerException, exMessage);
 
 			WriteLine(exMessage.ToString(), MessageType.Error);
+			
+			if(Debugger.IsAttached) Debugger.Break();
 		}
 
 		private static void WriteInnerException(Exception innerException, StringBuilder exMessage)
@@ -171,7 +185,7 @@ namespace Kamsar.WebConsole
 		/// <summary>
 		/// Writes a progress status message to the status line beneath the progress bar.
 		/// </summary>
-		public virtual void SetProgressStatus(string statusMessage, params object[] formatParameters)
+		public virtual void SetTransientStatus(string statusMessage, params object[] formatParameters)
 		{
 			string status = statusMessage;
 			if (formatParameters.Length > 0) status = string.Format(statusMessage, formatParameters);
@@ -201,40 +215,7 @@ namespace Kamsar.WebConsole
             SetProgress((int)Math.Round((itemsProcessed / (double)totalItems) * 100d));
         }
 
-		/// <summary>
-		/// Sets the progress of the whole based on the progress within a sub-task of the main progress (e.g. 0-100% of a task within the global range of 0-20%)
-		/// </summary>
-		/// <param name="taskNumber">The index of the current sub-task</param>
-		/// <param name="totalTasks">The total number of sub-tasks</param>
-		/// <param name="taskPercent">The percentage complete of the sub-task (0-100)</param>
-		public void SetTaskProgress(int taskNumber, int totalTasks, int taskPercent)
-		{
-			if (taskNumber < 1) throw new ArgumentException("taskNumber must be 1 or more");
-			if (totalTasks < 1) throw new ArgumentException("totalTasks must be 1 or more");
-			if (taskNumber > totalTasks) throw new ArgumentException("taskNumber was greater than the number of totalTasks!");
-
-			int start = (int)Math.Round(((taskNumber-1) / (double)totalTasks) * 100d);
-			int end = start + (int)Math.Round((1d / totalTasks) * 100d);
-
-			SetRangeTaskProgress(Math.Max(start, 0), Math.Min(end, 100), taskPercent);
-		}
-
-		/// <summary>
-		/// Sets the progress of the whole based on the progress within a percentage range of the main progress (e.g. 0-100% of a task within the global range of 0-20%)
-		/// </summary>
-		/// <param name="startPercentage">The percentage the task began at</param>
-		/// <param name="endPercentage">The percentage the task ends at</param>
-		/// <param name="taskPercent">The percentage complete of the sub-task (0-100)</param>
-		public void SetRangeTaskProgress(int startPercentage, int endPercentage, int taskPercent)
-		{
-			int range = endPercentage - startPercentage;
-
-			if (range <= 0) throw new ArgumentException("endPercentage must be greater than startPercentage");
-
-			int offset = (int)Math.Round(range * (taskPercent / 100d));
-
-			SetProgress(Math.Min(startPercentage + offset, 100));
-		}
+		
 
 		/// <summary>
 		/// Writes and executes a JavaScript statement on the console page. You don't need script tags, only JS content.
@@ -272,6 +253,31 @@ namespace Kamsar.WebConsole
 		{
 			get;
 			set;
+		}
+		
+		void IProgressStatus.Report(int percent)
+		{
+			SetProgress(percent);
+		}
+
+		void IProgressStatus.ReportException(Exception exception)
+		{
+			WriteException(exception);
+		}
+
+		void IProgressStatus.ReportStatus(string statusMessage, params object[] formatParameters)
+		{
+			((IProgressStatus)this).ReportStatus(statusMessage, MessageType.Info, formatParameters);
+		}
+
+		void IProgressStatus.ReportStatus(string statusMessage, MessageType type, params object[] formatParameters)
+		{
+			WriteLine(statusMessage, type, formatParameters);
+		}
+
+		void IProgressStatus.ReportTransientStatus(string statusMessage, params object[] formatParameters)
+		{
+			SetTransientStatus(statusMessage, formatParameters);
 		}
 	}
 }

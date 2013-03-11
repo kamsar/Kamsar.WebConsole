@@ -52,7 +52,7 @@ namespace Kamsar.WebConsole
 			throw new NotImplementedException("Use the overload with the process action to place your console output at a proper location in the markup.");
 		}
 
-		public virtual void Render(Action<WebConsole> processAction)
+		public virtual void Render(Action<IProgressStatus> processAction)
         {
 			_response.Write("<!DOCTYPE html>");
 

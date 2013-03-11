@@ -16,7 +16,7 @@ namespace Kamsar.WebConsole
 			_console = new Html5WebConsole(Response);
         }
 
-        protected abstract void Process(WebConsole console);
+        protected abstract void Process(IProgressStatus console);
 		protected abstract string PageTitle { get; }
 
 		protected override void Render(HtmlTextWriter writer)

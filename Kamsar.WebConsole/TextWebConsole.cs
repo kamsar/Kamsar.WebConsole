@@ -4,7 +4,7 @@ using System.Web;
 namespace Kamsar.WebConsole
 {
 	/// <summary>
-	/// Variant of the WebConsole that emits the Write/WriteLines done as text lines.
+	/// Variant of the WebConsole that emits the Write/WriteLines done as plain text lines (instead of HTML).
 	/// Useful when capturing text logs of a console (eg for non-web-emission contexts)
 	/// 
 	/// Progress reports are not captured.
@@ -53,7 +53,7 @@ namespace Kamsar.WebConsole
 			// do nothing
 		}
 
-		public override void SetProgressStatus(string statusMessage, params object[] formatParameters)
+		public override void SetTransientStatus(string statusMessage, params object[] formatParameters)
 		{
 			// do nothing
 		}
