@@ -2,3 +2,7 @@
 */obj
 *.suo
 *.user
+
+# NuGet packages
+packages/*
+!packages/repositories.config
