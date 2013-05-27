@@ -26,10 +26,9 @@ namespace Kamsar.WebConsole
 		readonly int _subtaskCount = 100;
 		readonly bool _automaticTransientStatus;
 		Timer _heartbeat;
-		DateTime _startTime;
+		readonly DateTime _startTime = DateTime.Now;
 		readonly string _taskName;
 		int _progress;
-
 
 		/// <summary>
 		/// Default constructor. Automatically manages transient status for you.
@@ -97,7 +96,14 @@ namespace Kamsar.WebConsole
 
 		public void Dispose()
 		{
-			SetProgress(100);
+			if (_heartbeat != null)
+			{
+				_heartbeat.Stop();
+				_heartbeat.Dispose();
+			}
+
+			ReportTransientStatus(string.Empty);
+			_mainTask.ReportStatus("{0} has completed in  {1} sec", MessageType.Debug, _taskName, Math.Round((DateTime.Now - _startTime).TotalSeconds).ToString(CultureInfo.InvariantCulture));
 		}
 
 		public int Progress { get { return _progress; } }
@@ -106,15 +112,6 @@ namespace Kamsar.WebConsole
 		{
 			_progress = taskProgress;
 			SetTaskProgress(_subtaskIndex, _subtaskCount, taskProgress);
-			if (taskProgress == 100)
-			{
-				_heartbeat.Stop();
-
-				ReportTransientStatus(string.Empty);
-				_mainTask.ReportStatus("{0} has completed in  {1} sec", MessageType.Debug, _taskName, Math.Round((DateTime.Now - _startTime).TotalSeconds).ToString(CultureInfo.InvariantCulture));
-
-				_heartbeat.Dispose();
-			}
 		}
 
 		private void InitializeStatus()
@@ -123,7 +120,6 @@ namespace Kamsar.WebConsole
 
 			ReportTransientStatus(_taskName + " running");
 
-			_startTime = DateTime.Now;
 			_heartbeat = new Timer(2000);
 			_heartbeat.AutoReset = true;
 			_heartbeat.Elapsed += (sender, args) =>
@@ -132,6 +128,7 @@ namespace Kamsar.WebConsole
 
 				ReportTransientStatus("{0} running ({1} sec)", _taskName, elapsed.ToString(CultureInfo.InvariantCulture));
 			};
+
 			_heartbeat.Start();
 		}
 
