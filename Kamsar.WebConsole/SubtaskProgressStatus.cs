@@ -102,7 +102,12 @@ namespace Kamsar.WebConsole
 				_heartbeat.Dispose();
 			}
 
-			ReportTransientStatus(string.Empty);
+			if(_automaticTransientStatus)
+				ReportTransientStatus(string.Empty);
+
+			if(Progress < 100)
+				Report(100);
+
 			_mainTask.ReportStatus("{0} has completed in  {1} sec", MessageType.Debug, _taskName, Math.Round((DateTime.Now - _startTime).TotalSeconds).ToString(CultureInfo.InvariantCulture));
 		}
 

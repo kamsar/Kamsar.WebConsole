@@ -6,3 +6,5 @@
 # NuGet packages
 packages/*
 !packages/repositories.config
+
+Kamsar.WebConsole/*.nupkg

@@ -26,7 +26,7 @@ namespace Kamsar.WebConsole
 				_response.BufferOutput = false;
 			}
 
-			ExtraMessagePaddingLength = 128;
+			MinimumMessageLength = 128;
 		}
 
 		public WebConsole(HttpResponse response, bool forceBuffer)
@@ -226,7 +226,7 @@ namespace Kamsar.WebConsole
 			
 			var padding = new StringBuilder("<div style=\"display: none;\">");
 			var random = new Random();
-			for (int i = 0; i < ExtraMessagePaddingLength; i++)
+			for (int i = script.Length; i < MinimumMessageLength; i++)
 				padding.Append((char)random.Next(33, 126));
 
 			padding.Append("</div>");
@@ -249,11 +249,7 @@ namespace Kamsar.WebConsole
 		/// <summary>
 		/// Extra padding chars added to the end of each message sent to the page. Defeats gzip compression chunking preventing full flushing.
 		/// </summary>
-		public int ExtraMessagePaddingLength
-		{
-			get;
-			set;
-		}
+		public int MinimumMessageLength { get; set; }
 		
 		void IProgressStatus.Report(int percent)
 		{
