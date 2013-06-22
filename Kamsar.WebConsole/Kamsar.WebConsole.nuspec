@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/kamsar/Kamsar.WebConsole</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A library to create a Web-based, live updating "console" window. Useful for pages that process some sort of background task like an index rebuild or database backup. Compatible with MVC or Web Forms.</description>
-    <releaseNotes>Fix bug where subtasks would not set their state to complete on disposal. Fixed an issue when subtasks were not using automatic transient status where status was still being cleared.</releaseNotes>
+    <releaseNotes>Added TeeProgressStatus - allows multiple progress objects to be written to by a proxy</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>web console</tags>
   </metadata>
