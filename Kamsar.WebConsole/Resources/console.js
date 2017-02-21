@@ -1,7 +1,7 @@
 ﻿var CS = CS || {};
 
 CS.BufferLength = 200;
-CS.Console = new Array(10000);
+CS.Console = new Array();
 CS.LastConsoleLength = 0;
 
 CS.SetProgress = function (percent) {
@@ -29,13 +29,13 @@ CS.BatchComplete = function () {
 
 	var contents = bufferArray.join('');
 
-	if (bufferArray.length !== CS.Console.length) {
+	if (bufferArray.length != CS.Console.length) {
 		contents = "<button onclick=\"CS.ShowAll()\" class=\"expand\">Expand complete log</button>" + contents;
 	}
 
-	var console = document.getElementById('console');
-	console.innerHTML = contents;
+	var consoleElement = document.getElementById('console');
+	consoleElement.innerHTML = contents;
 
-	var scrollHeight = Math.max(console.scrollHeight, console.clientHeight);
-	console.scrollTop = scrollHeight - console.clientHeight;
+	var scrollHeight = Math.max(consoleElement.scrollHeight, consoleElement.clientHeight);
+	consoleElement.scrollTop = scrollHeight - consoleElement.clientHeight;
 }
