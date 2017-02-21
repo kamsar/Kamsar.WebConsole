@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.WebControls.WebParts;
 
 namespace Kamsar.WebConsole
 {
@@ -158,13 +159,11 @@ namespace Kamsar.WebConsole
 			if (innerException == null) return;
 
 			exMessage.Append("<div class=\"innerexception\">");
-			exMessage.AppendFormat("{0} ({1})", innerException.Message, innerException.GetType().FullName);
-			exMessage.Append("<div class=\"stacktrace\">");
-
-			exMessage.Append(innerException.StackTrace?.Trim().Replace("\n", "<br />") ?? "No stack trace available.");
-
-			WriteInnerException(innerException.InnerException, exMessage);
-
+				exMessage.AppendFormat("{0} ({1})", innerException.Message, innerException.GetType().FullName);
+				exMessage.Append("<div class=\"stacktrace\">");
+					exMessage.Append(innerException.StackTrace?.Trim().Replace("\n", "<br />") ?? "No stack trace available.");
+					WriteInnerException(innerException.InnerException, exMessage);
+				exMessage.Append("</div>");
 			exMessage.Append("</div>");
 		}
 
