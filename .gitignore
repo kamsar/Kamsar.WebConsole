@@ -9,4 +9,4 @@
 packages/*
 !packages/repositories.config
 
-Kamsar.WebConsole/*.nupkg
+build/*.nupkg
