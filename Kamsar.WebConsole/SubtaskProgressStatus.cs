@@ -63,38 +63,38 @@ namespace Kamsar.WebConsole
 			InitializeStatus();
 		}
 
-		public void Report(int percent)
+		public virtual void Report(int percent)
 		{
 			SetProgress(percent);
 		}
 
-		public void Report(int percent, string statusMessage, params object[] formatParameters)
+		public virtual void Report(int percent, string statusMessage, params object[] formatParameters)
 		{
 			Report(percent, statusMessage, MessageType.Info, formatParameters);
 		}
 
-		public void Report(int percent, string statusMessage, MessageType type, params object[] formatParameters)
+		public virtual void Report(int percent, string statusMessage, MessageType type, params object[] formatParameters)
 		{
 			SetProgress(percent);
 			_mainTask.ReportStatus(statusMessage, type, formatParameters);
 		}
 
-		public void ReportStatus(string statusMessage, params object[] formatParameters)
+		public virtual void ReportStatus(string statusMessage, params object[] formatParameters)
 		{
 			ReportStatus(statusMessage, MessageType.Info, formatParameters);
 		}
 
-		public void ReportStatus(string statusMessage, MessageType type, params object[] formatParameters)
+		public virtual void ReportStatus(string statusMessage, MessageType type, params object[] formatParameters)
 		{
 			_mainTask.ReportStatus(statusMessage, type, formatParameters);
 		}
 
-		public void ReportException(Exception exception)
+		public virtual void ReportException(Exception exception)
 		{
 			_mainTask.ReportException(exception);
 		}
 
-		public void Dispose()
+		public virtual void Dispose()
 		{
 			if (_heartbeat != null)
 			{
@@ -111,15 +111,15 @@ namespace Kamsar.WebConsole
 			_mainTask.ReportStatus("{0} has completed in  {1} sec", MessageType.Debug, _taskName, Math.Round((DateTime.Now - _startTime).TotalSeconds).ToString(CultureInfo.InvariantCulture));
 		}
 
-		public int Progress => _progress;
+		public virtual int Progress => _progress;
 
-		private void SetProgress(int taskProgress)
+		protected virtual void SetProgress(int taskProgress)
 		{
 			_progress = taskProgress;
 			SetTaskProgress(_subtaskIndex, _subtaskCount, taskProgress);
 		}
 
-		private void InitializeStatus()
+		protected virtual void InitializeStatus()
 		{
 			if (!_automaticTransientStatus) return;
 
@@ -143,7 +143,7 @@ namespace Kamsar.WebConsole
 		/// <param name="taskNumber">The index of the current sub-task</param>
 		/// <param name="totalTasks">The total number of sub-tasks</param>
 		/// <param name="taskPercent">The percentage complete of the sub-task (0-100)</param>
-		private void SetTaskProgress(int taskNumber, int totalTasks, int taskPercent)
+		protected virtual void SetTaskProgress(int taskNumber, int totalTasks, int taskPercent)
 		{
 			if (taskNumber < 1) throw new ArgumentException("taskNumber must be 1 or more");
 			if (totalTasks < 1) throw new ArgumentException("totalTasks must be 1 or more");
@@ -161,7 +161,7 @@ namespace Kamsar.WebConsole
 		/// <param name="startPercentage">The percentage the task began at</param>
 		/// <param name="endPercentage">The percentage the task ends at</param>
 		/// <param name="taskPercent">The percentage complete of the sub-task (0-100)</param>
-		private void SetRangeTaskProgress(int startPercentage, int endPercentage, int taskPercent)
+		protected virtual void SetRangeTaskProgress(int startPercentage, int endPercentage, int taskPercent)
 		{
 			int range = endPercentage - startPercentage;
 
@@ -172,7 +172,7 @@ namespace Kamsar.WebConsole
 			_mainTask.Report(Math.Min(startPercentage + offset, 100));
 		}
 
-		public void ReportTransientStatus(string statusMessage, params object[] formatParameters)
+		public virtual void ReportTransientStatus(string statusMessage, params object[] formatParameters)
 		{
 			_mainTask.ReportTransientStatus(statusMessage, formatParameters);
 		}

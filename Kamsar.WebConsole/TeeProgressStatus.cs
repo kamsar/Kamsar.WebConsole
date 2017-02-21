@@ -19,33 +19,33 @@ namespace Kamsar.WebConsole
 			_progressReporters = progressReporters;
 		}
 
-		public void Report(int percent)
+		public virtual void Report(int percent)
 		{
 			foreach(var reporter in _progressReporters)
 				reporter.Report(percent);
 		}
 
-		public int Progress => _progressReporters[0].Progress;
+		public virtual int Progress => _progressReporters[0].Progress;
 
-		public void ReportException(Exception exception)
+		public virtual void ReportException(Exception exception)
 		{
 			foreach (var reporter in _progressReporters)
 				reporter.ReportException(exception);
 		}
 
-		public void ReportStatus(string statusMessage, params object[] formatParameters)
+		public virtual void ReportStatus(string statusMessage, params object[] formatParameters)
 		{
 			foreach (var reporter in _progressReporters)
 				reporter.ReportStatus(statusMessage, formatParameters);
 		}
 
-		public void ReportStatus(string statusMessage, MessageType type, params object[] formatParameters)
+		public virtual void ReportStatus(string statusMessage, MessageType type, params object[] formatParameters)
 		{
 			foreach (var reporter in _progressReporters)
 				reporter.ReportStatus(statusMessage, type, formatParameters);
 		}
 
-		public void ReportTransientStatus(string statusMessage, params object[] formatParameters)
+		public virtual void ReportTransientStatus(string statusMessage, params object[] formatParameters)
 		{
 			foreach (var reporter in _progressReporters)
 				reporter.ReportTransientStatus(statusMessage, formatParameters);

@@ -28,7 +28,7 @@ namespace Kamsar.WebConsole
 		/// Sends a "signal" to the console receiver. Signals are stored in a collection and can be reviewed.
 		/// For example a signal to perform a redirect might be used for when a process succeeds or fails.
 		/// </summary>
-		public void WriteRemoteSignal(string signalContent)
+		public virtual void WriteRemoteSignal(string signalContent)
 		{
 			WriteScript("SIGNAL::" + signalContent);
 		}

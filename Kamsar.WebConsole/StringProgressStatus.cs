@@ -16,7 +16,7 @@ namespace Kamsar.WebConsole
 		private readonly StringBuilder _errors = new StringBuilder();
 		private readonly StringBuilder _warnings = new StringBuilder();
 
-		public void ReportException(Exception exception)
+		public virtual void ReportException(Exception exception)
 		{
 			var exMessage = new StringBuilder();
 			exMessage.AppendFormat("ERROR: {0} ({1})", exception.Message, exception.GetType().FullName);
@@ -33,12 +33,12 @@ namespace Kamsar.WebConsole
 			if (Debugger.IsAttached) Debugger.Break();
 		}
 
-		public void ReportStatus(string statusMessage, params object[] formatParameters)
+		public virtual void ReportStatus(string statusMessage, params object[] formatParameters)
 		{
 			ReportStatus(statusMessage, MessageType.Info, formatParameters);
 		}
 
-		public void ReportStatus(string statusMessage, MessageType type, params object[] formatParameters)
+		public virtual void ReportStatus(string statusMessage, MessageType type, params object[] formatParameters)
 		{
 			var line = new StringBuilder();
 
@@ -57,13 +57,13 @@ namespace Kamsar.WebConsole
 			if (type == MessageType.Warning)
 				_warnings.AppendLine(HttpUtility.HtmlEncode(line.ToString()));
 		}
-		
-		public void Report(int percent)
+
+		public virtual void Report(int percent)
 		{
 			Progress = percent;
 		}
 
-		public void ReportTransientStatus(string statusMessage, params object[] formatParameters)
+		public virtual void ReportTransientStatus(string statusMessage, params object[] formatParameters)
 		{
 			// do nothing
 		}
@@ -71,24 +71,24 @@ namespace Kamsar.WebConsole
 		/// <summary>
 		/// All available console output
 		/// </summary>
-		public string Output => _output.ToString();
+		public virtual string Output => _output.ToString();
 
 		/// <summary>
 		/// All error output from the console
 		/// </summary>
-		public string Errors => _errors.ToString();
+		public virtual string Errors => _errors.ToString();
 
 		/// <summary>
 		/// All warning output from the console
 		/// </summary>
-		public string Warnings => _warnings.ToString();
+		public virtual string Warnings => _warnings.ToString();
 
-		public bool HasErrors => _errors.Length > 0;
-		public bool HasWarnings => _warnings.Length > 0;
+		public virtual bool HasErrors => _errors.Length > 0;
+		public virtual bool HasWarnings => _warnings.Length > 0;
 
-		public int Progress { get; private set; }
+		public virtual int Progress { get; private set; }
 
-		private static void WriteInnerException(Exception innerException, StringBuilder exMessage)
+		protected virtual void WriteInnerException(Exception innerException, StringBuilder exMessage)
 		{
 			if (innerException == null) return;
 

@@ -52,7 +52,7 @@ namespace Kamsar.WebConsole
 			AfterProcessRemote?.Invoke(this);
 		}
 
-		public IList<string> RemoteSignals { get; }
+		public virtual IList<string> RemoteSignals { get; }
 
 		public event Action<RemoteWebConsoleReceiver> BeforeProcessRemote;
 		public event Action<RemoteWebConsoleReceiver> AfterProcessRemote;

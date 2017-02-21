@@ -250,7 +250,7 @@ namespace Kamsar.WebConsole
 		/// <summary>
 		/// Gets the current completion percentage
 		/// </summary>
-		public int Progress => _progress;
+		public virtual int Progress => _progress;
 
 		/// <summary>
 		/// Extra padding chars added to the end of each message sent to the page. Defeats gzip compression chunking preventing full flushing.
