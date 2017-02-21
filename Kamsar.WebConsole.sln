@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kamsar.WebConsole", "Kamsar.WebConsole\Kamsar.WebConsole.csproj", "{0B067AB0-984E-4781-93FE-FAB7919EE0CF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kamsar.WebConsole.Samples", "Kamsar.WebConsole.Samples\Kamsar.WebConsole.Samples.csproj", "{FE017C5F-27EE-4C34-95A1-7B5BA58CF3B0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6FE2551C-065A-4A9F-BB76-5979964B4059}"
 	ProjectSection(SolutionItems) = preProject
@@ -29,10 +29,6 @@ Global
 		{0B067AB0-984E-4781-93FE-FAB7919EE0CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B067AB0-984E-4781-93FE-FAB7919EE0CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B067AB0-984E-4781-93FE-FAB7919EE0CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FE017C5F-27EE-4C34-95A1-7B5BA58CF3B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FE017C5F-27EE-4C34-95A1-7B5BA58CF3B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FE017C5F-27EE-4C34-95A1-7B5BA58CF3B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FE017C5F-27EE-4C34-95A1-7B5BA58CF3B0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{46C7C779-AFF2-4FF1-B9BA-FDA2BDC37A21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{46C7C779-AFF2-4FF1-B9BA-FDA2BDC37A21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46C7C779-AFF2-4FF1-B9BA-FDA2BDC37A21}.Release|Any CPU.ActiveCfg = Release|Any CPU

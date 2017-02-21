@@ -1,1 +1,0 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Customized.aspx.cs" Inherits="Kamsar.WebConsole.Samples.Customized" %>
