@@ -53,9 +53,6 @@
     <Compile Include="MessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Html5WebConsole.cs" />
-    <Compile Include="WebConsolePage.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="SubtaskProgressStatus.cs" />
   </ItemGroup>
   <PropertyGroup>
