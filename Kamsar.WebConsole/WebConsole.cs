@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls.WebParts;
 
 namespace Kamsar.WebConsole
 {
@@ -30,8 +29,6 @@ namespace Kamsar.WebConsole
 				_response.Buffer = false;
 				_response.BufferOutput = false;
 			}
-
-			MinimumMessageLength = 128;
 
 			_flushTimer = new Timer(FlushQueue, null, Timeout.Infinite, Timeout.Infinite);
 			_flushQueue = new ConcurrentQueue<string>();
@@ -208,7 +205,7 @@ namespace Kamsar.WebConsole
 		{
 			if (_flushQueue.Count == 0)
 			{
-				_flushTimer.Change(500, Timeout.Infinite);
+				_flushTimer.Change(FlushDebounceIntervalMsec, Timeout.Infinite);
 			}
 
 			_flushQueue.Enqueue(script);
@@ -258,7 +255,12 @@ namespace Kamsar.WebConsole
 		/// <summary>
 		/// Extra padding chars added to the end of each message sent to the page. Defeats gzip compression chunking preventing full flushing.
 		/// </summary>
-		public int MinimumMessageLength { get; set; }
+		public int MinimumMessageLength { get; set; } = 128;
+
+		/// <summary>
+		/// Gets or sets how often the console should flush buffered output to the client
+		/// </summary>
+		public int FlushDebounceIntervalMsec { get; set; } = 500;
 
 		void IProgressStatus.Report(int percent)
 		{
