@@ -13,19 +13,16 @@ namespace Kamsar.WebConsole
 	{
 		private readonly HttpResponseBase _response;
 
-		public TextWebConsole(HttpResponseBase response) : base(response)
+		public TextWebConsole(HttpResponseBase response, bool forceBuffer = true) : base(response, forceBuffer)
 		{
 			_response = response;
 		}
 
-		public TextWebConsole(HttpResponse response)
-			: base(new HttpResponseWrapper(response))
-		{
-			_response = new HttpResponseWrapper(response);
-		}
-
 		public override void Write(string statusMessage, MessageType type, params object[] formatParameters)
 		{
+			if (type == MessageType.Error) HasErrors = true;
+			if (type == MessageType.Warning) HasWarnings = true;
+
 			var line = new StringBuilder();
 
 			line.AppendFormat("{0}: ", type);
@@ -57,5 +54,8 @@ namespace Kamsar.WebConsole
 		{
 			// do nothing
 		}
+
+		public bool HasErrors { get; private set; }
+		public bool HasWarnings { get; private set; }
 	}
 }

@@ -17,11 +17,6 @@ namespace Kamsar.WebConsole
 			Title = string.Empty;
 		}
 
-		public Html5WebConsole(HttpResponse response)
-			: this(new HttpResponseWrapper(response))
-		{
-		}
-
 		public string Title { get; set; }
 
 		/// <summary>

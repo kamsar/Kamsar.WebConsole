@@ -21,14 +21,14 @@ namespace Kamsar.WebConsole
 	/// </example>
 	public class SubtaskProgressStatus : IProgressStatus, IDisposable
 	{
-		readonly IProgressStatus _mainTask;
+		private readonly IProgressStatus _mainTask;
 		private readonly int _subtaskIndex;
 		private readonly int _subtaskCount;
 		private readonly bool _automaticTransientStatus;
-		Timer _heartbeat;
+		private Timer _heartbeat;
 		private readonly DateTime _startTime = DateTime.Now;
 		private readonly string _taskName;
-		int _progress;
+		private int _progress;
 
 		/// <summary>
 		/// Default constructor. Automatically manages transient status for you.
@@ -111,7 +111,7 @@ namespace Kamsar.WebConsole
 			_mainTask.ReportStatus("{0} has completed in  {1} sec", MessageType.Debug, _taskName, Math.Round((DateTime.Now - _startTime).TotalSeconds).ToString(CultureInfo.InvariantCulture));
 		}
 
-		public int Progress { get { return _progress; } }
+		public int Progress => _progress;
 
 		private void SetProgress(int taskProgress)
 		{
