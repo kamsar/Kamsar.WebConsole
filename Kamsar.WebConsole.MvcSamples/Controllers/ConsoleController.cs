@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Threading;
 using System.Web.Mvc;
 using Kamsar.WebConsole.MvcSamples.Models;
 
 namespace Kamsar.WebConsole.MvcSamples.Controllers
 {
-    public class ConsoleController : Controller
-    {
-        public ActionResult Demo()
-        {
+	public class ConsoleController : Controller
+	{
+		public ActionResult Demo()
+		{
 			var processor = new Html5WebConsole(Response);
 
 			processor.Title = "MVC Demo";
@@ -28,7 +27,7 @@ namespace Kamsar.WebConsole.MvcSamples.Controllers
 					progress.Report(i);
 
 					// demonstrate setting a substatus of the progress bar (e.g. "making database backup")
-					if (i % 10 == 0) progress.ReportTransientStatus(string.Format("{0}/{1}", i, 100));
+					if (i % 10 == 0) progress.ReportTransientStatus($"{i}/{100}");
 
 					// write some stuff to the console to demonstrate detailed output
 					progress.ReportStatus("At {0}", MessageType.Info, i);
@@ -60,6 +59,31 @@ namespace Kamsar.WebConsole.MvcSamples.Controllers
 			});
 
 			return Content("");
-        }
-    }
+		}
+
+		public ActionResult ScalingDemo()
+		{
+			var processor = new Html5WebConsole(Response);
+
+			processor.Title = "MVC Scaling Demo";
+
+			// drops multithreaded 70,000 entries into the console :)
+
+			int scale = 70000;
+
+			processor.Render(progress =>
+			{
+				progress.ReportStatus("WebConsole MVC Scaling Demo starting...");
+
+				Enumerable.Range(0, scale).AsParallel().ForAll(i =>
+				{
+					Thread.Sleep(1);
+					progress.ReportStatus($"LOL {i}");
+					progress.Report((int)(((double)i / scale) * 100));
+				});
+			});
+
+			return Content("");
+		}
+	}
 }
