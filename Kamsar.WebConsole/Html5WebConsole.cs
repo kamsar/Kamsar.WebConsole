@@ -8,7 +8,7 @@ namespace Kamsar.WebConsole
 	/// </summary>
 	public class Html5WebConsole : WebConsole
 	{
-		readonly HttpResponseBase _response;
+		private readonly HttpResponseBase _response;
 
 		public Html5WebConsole(HttpResponseBase response) : base(response)
 		{
@@ -26,15 +26,15 @@ namespace Kamsar.WebConsole
 		/// <summary>
 		/// Renders content into the head tag
 		/// </summary>
-        protected virtual void RenderHead()
-        {
+		protected virtual void RenderHead()
+		{
 			if (!string.IsNullOrEmpty(Title))
 			{
-				_response.Write(string.Format("<title>{0}</title>", Title));
+				_response.Write($"<title>{Title}</title>");
 			}
 
 			RenderResources();
-        }
+		}
 
 		/// <summary>
 		/// Renders heading content into the page (e.g. a h1 of the title, etc)
@@ -43,7 +43,7 @@ namespace Kamsar.WebConsole
 		{
 			if (!string.IsNullOrEmpty(Title))
 			{
-				_response.Write(string.Format("<h1>{0}</h1>", HttpUtility.HtmlEncode(Title)));
+				_response.Write($"<h1>{HttpUtility.HtmlEncode(Title)}</h1>");
 			}
 		}
 
@@ -53,13 +53,13 @@ namespace Kamsar.WebConsole
 		}
 
 		public virtual void Render(Action<IProgressStatus> processAction)
-        {
+		{
 			_response.Write("<!DOCTYPE html>");
 
 			_response.Write("<html>");
 			_response.Write("<head>");
 
-            RenderHead();
+			RenderHead();
 
 			_response.Write("</head>");
 			_response.Write("<body>");
@@ -77,6 +77,6 @@ namespace Kamsar.WebConsole
 			_response.Write("</body>");
 			_response.Write("</html>");
 			_response.Flush();
-        }
+		}
 	}
 }

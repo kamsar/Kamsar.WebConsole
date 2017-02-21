@@ -22,12 +22,12 @@ namespace Kamsar.WebConsole
 	public class SubtaskProgressStatus : IProgressStatus, IDisposable
 	{
 		readonly IProgressStatus _mainTask;
-		readonly int _subtaskIndex;
-		readonly int _subtaskCount = 100;
-		readonly bool _automaticTransientStatus;
+		private readonly int _subtaskIndex;
+		private readonly int _subtaskCount;
+		private readonly bool _automaticTransientStatus;
 		Timer _heartbeat;
-		readonly DateTime _startTime = DateTime.Now;
-		readonly string _taskName;
+		private readonly DateTime _startTime = DateTime.Now;
+		private readonly string _taskName;
 		int _progress;
 
 		/// <summary>

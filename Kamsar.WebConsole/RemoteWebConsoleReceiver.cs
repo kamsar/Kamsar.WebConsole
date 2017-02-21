@@ -25,7 +25,7 @@ namespace Kamsar.WebConsole
 
 		public override void Render()
 		{
-			if (BeforeProcessRemote != null) BeforeProcessRemote(this);
+			BeforeProcessRemote?.Invoke(this);
 
 			var client = new WebClient();
 
@@ -49,7 +49,7 @@ namespace Kamsar.WebConsole
 				}
 			}
 
-			if (AfterProcessRemote != null) AfterProcessRemote(this);
+			AfterProcessRemote?.Invoke(this);
 		}
 
 		public IList<string> RemoteSignals { get; private set; }

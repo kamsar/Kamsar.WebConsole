@@ -13,8 +13,8 @@ namespace Kamsar.WebConsole
 
 		public TeeProgressStatus(params IProgressStatus[] progressReporters)
 		{
-			if(progressReporters == null) throw new ArgumentNullException("progressReporters");
-			if(progressReporters.Length == 0) throw new ArgumentOutOfRangeException("progressReporters", "Must have at least one progress to report to.");
+			if(progressReporters == null) throw new ArgumentNullException(nameof(progressReporters));
+			if(progressReporters.Length == 0) throw new ArgumentOutOfRangeException(nameof(progressReporters), "Must have at least one progress to report to.");
 
 			_progressReporters = progressReporters;
 		}
