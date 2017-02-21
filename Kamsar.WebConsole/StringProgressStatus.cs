@@ -15,7 +15,6 @@ namespace Kamsar.WebConsole
 		private readonly StringBuilder _output = new StringBuilder();
 		private readonly StringBuilder _errors = new StringBuilder();
 		private readonly StringBuilder _warnings = new StringBuilder();
-		private int _progressPercent;
 
 		public void ReportException(Exception exception)
 		{
@@ -61,7 +60,7 @@ namespace Kamsar.WebConsole
 		
 		public void Report(int percent)
 		{
-			_progressPercent = percent;
+			Progress = percent;
 		}
 
 		public void ReportTransientStatus(string statusMessage, params object[] formatParameters)
@@ -87,7 +86,7 @@ namespace Kamsar.WebConsole
 		public bool HasErrors => _errors.Length > 0;
 		public bool HasWarnings => _warnings.Length > 0;
 
-		public int Progress => _progressPercent;
+		public int Progress { get; private set; }
 
 		private static void WriteInnerException(Exception innerException, StringBuilder exMessage)
 		{
@@ -97,10 +96,7 @@ namespace Kamsar.WebConsole
 			exMessage.AppendFormat("{0} ({1})", innerException.Message, innerException.GetType().FullName);
 			exMessage.AppendLine();
 
-			if (innerException.StackTrace != null)
-				exMessage.Append(innerException.StackTrace.Trim());
-			else
-				exMessage.Append("No stack trace available.");
+			exMessage.Append(innerException.StackTrace?.Trim() ?? "No stack trace available.");
 
 			WriteInnerException(innerException.InnerException, exMessage);
 

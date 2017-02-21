@@ -12,8 +12,8 @@ namespace Kamsar.WebConsole
 	/// </summary>
 	public class RemoteWebConsoleReceiver : WebConsole
 	{
-		readonly string _remoteConsoleUrl;
-		readonly ICredentials _credentials;
+		private readonly string _remoteConsoleUrl;
+		private readonly ICredentials _credentials;
 
 		public RemoteWebConsoleReceiver(HttpResponseBase response, string remoteConsoleUrl, ICredentials remoteCredentials) : base(response)
 		{
@@ -52,7 +52,7 @@ namespace Kamsar.WebConsole
 			AfterProcessRemote?.Invoke(this);
 		}
 
-		public IList<string> RemoteSignals { get; private set; }
+		public IList<string> RemoteSignals { get; }
 
 		public event Action<RemoteWebConsoleReceiver> BeforeProcessRemote;
 		public event Action<RemoteWebConsoleReceiver> AfterProcessRemote;

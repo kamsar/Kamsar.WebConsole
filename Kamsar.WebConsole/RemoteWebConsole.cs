@@ -8,7 +8,7 @@ namespace Kamsar.WebConsole
 	/// </summary>
 	public class RemoteWebConsole : WebConsole
 	{
-		readonly HttpResponseBase _response;
+		private readonly HttpResponseBase _response;
 
 		public RemoteWebConsole(HttpResponse response) : base(response)
 		{

@@ -1,89 +1,95 @@
 ﻿body {
-    font-family: Helvetica, 'Trebuchet MS', sans-serif;
+	font-family: Helvetica, 'Trebuchet MS', sans-serif;
 }
 
 .wrapper {
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .progress {
-
 }
-    .progress h2 {
-        margin-bottom: 0.1em;
-    }
 
-    .progress p#status {
-        color: gray;
-        font-style: italic;
-        margin-top: 0.1em;
-        font-size: 0.9em;
-    }
+	.progress h2 {
+		margin-bottom: 0.1em;
+	}
+
+	.progress p#status {
+		color: gray;
+		font-style: italic;
+		margin-top: 0.1em;
+		font-size: 0.9em;
+	}
 
 .progressbar {
-    font-size: 1.5em;
-    width: 100%;
-    height: 1.1em;
-    background-color: white;
-    border: 1px solid gray;
-    text-align: center;
+	font-size: 1.5em;
+	width: 100%;
+	height: 1.1em;
+	background-color: white;
+	border: 1px solid gray;
+	text-align: center;
 }
 
-    .progressbar #bar {
-        background: #329cff; /* Old browsers */
-		background: -moz-linear-gradient(top,  #329cff 0%, #0080ff 50%, #329cff 100%); /* FF3.6+ */
+	.progressbar #bar {
+		background: #329cff; /* Old browsers */
+		background: -moz-linear-gradient(top, #329cff 0%, #0080ff 50%, #329cff 100%); /* FF3.6+ */
 		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#329cff), color-stop(50%,#0080ff), color-stop(100%,#329cff)); /* Chrome,Safari4+ */
-		background: -webkit-linear-gradient(top,  #329cff 0%,#0080ff 50%,#329cff 100%); /* Chrome10+,Safari5.1+ */
-		background: -o-linear-gradient(top,  #329cff 0%,#0080ff 50%,#329cff 100%); /* Opera 11.10+ */
-		background: -ms-linear-gradient(top,  #329cff 0%,#0080ff 50%,#329cff 100%); /* IE10+ */
-		background: linear-gradient(to bottom,  #329cff 0%,#0080ff 50%,#329cff 100%); /* W3C */
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#329cff', endColorstr='#329cff',GradientType=0 ); /* IE6-9 */
-        display: block;
-        float: left;
-        height: 1.1em;
-        width: 0%;
-        border-right: 1px solid gray;
-    }
+		background: -webkit-linear-gradient(top, #329cff 0%,#0080ff 50%,#329cff 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top, #329cff 0%,#0080ff 50%,#329cff 100%); /* Opera 11.10+ */
+		background: linear-gradient(to bottom, #329cff 0%,#0080ff 50%,#329cff 100%); /* W3C */
+		display: block;
+		float: left;
+		height: 1.1em;
+		width: 0%;
+		border-right: 1px solid gray;
+	}
 
-    .progressbar #percentage {
-        position: absolute;
-        left: 40%;
-        right: 40%;
-        text-align: center;
-    }
+	.progressbar #percentage {
+		position: absolute;
+		left: 40%;
+		right: 40%;
+		text-align: center;
+	}
 
 #console {
-    background-color: black;
-    color: #0F0;
-    font-family: Consolas, 'Courier New', Courier, monospace;
-    height: 30em;
-    overflow: auto;
-    padding: 0.5em;
+	background-color: black;
+	color: #0F0;
+	font-family: Consolas, 'Courier New', Courier, monospace;
+	height: 30em;
+	overflow: auto;
+	padding: 0.5em;
 }
 
-    #console .error {
-        color: red;
-        font-weight: bold;
-    }
+.error {
+	color: red;
+	font-weight: bold;
+}
 
-		#console .error .stacktrace
-		{
-			color: gray;
-			font-size: 0.8em;
-		}
+	.error .stacktrace {
+		color: gray;
+		font-size: 0.8em;
+	}
 
-		#console .error .innerexception
-		{
-			margin-left: 2em;
-			color: red;
-		}
+	.error .innerexception {
+		margin-left: 2em;
+		color: red;
+	}
 
-    #console .warning {
-        color: #FF8000;
-    }
+.warning {
+	color: #FF8000;
+}
 
-    #console .debug {
-        color: #FFF;
-    }
+.debug {
+	color: #FFF;
+}
+
+.expand {
+	border: 2px solid #0F0;
+	background-color: transparent;
+	color: #0F0;
+	display: block;
+	font-family: Consolas, 'Courier New', Courier, monospace;
+	margin-bottom: 1em;
+	padding: 8px;
+}

@@ -25,10 +25,7 @@ namespace Kamsar.WebConsole
 				reporter.Report(percent);
 		}
 
-		public int Progress
-		{
-			get { return _progressReporters[0].Progress; }
-		}
+		public int Progress => _progressReporters[0].Progress;
 
 		public void ReportException(Exception exception)
 		{
