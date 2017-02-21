@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.UI;
 
@@ -9,14 +11,16 @@ namespace Kamsar.WebConsole
 	/// <summary>
 	/// Implements a basic WebConsole in HTML snippets. When using this class you're responsible for wrapping HTML and making sure the console output is emitted at a proper location.
 	/// </summary>
-	public class WebConsole : IProgressStatus
+	public class WebConsole : IProgressStatus, IDisposable
 	{
 		private readonly HttpResponseBase _response;
 		private bool _resourcesRendered;
 		private bool _progressRendered;
 		private bool _consoleRendered;
+		private readonly Timer _flushTimer;
+		private readonly ConcurrentQueue<string> _flushQueue;
 
-		public WebConsole(HttpResponseBase response, bool forceBuffer)
+		public WebConsole(HttpResponseBase response, bool forceBuffer = true)
 		{
 			_response = response;
 
@@ -27,21 +31,9 @@ namespace Kamsar.WebConsole
 			}
 
 			MinimumMessageLength = 128;
-		}
 
-		public WebConsole(HttpResponse response, bool forceBuffer)
-			: this(new HttpResponseWrapper(response), forceBuffer)
-		{
-		}
-
-		public WebConsole(HttpResponseBase response)
-			: this(response, true)
-		{
-		}
-
-		public WebConsole(HttpResponse response)
-			: this(new HttpResponseWrapper(response))
-		{
+			_flushTimer = new Timer(FlushQueue, null, Timeout.Infinite, Timeout.Infinite);
+			_flushQueue = new ConcurrentQueue<string>();
 		}
 
 		private int _progress;
@@ -52,8 +44,8 @@ namespace Kamsar.WebConsole
 		public virtual void RenderResources()
 		{
 			var page = new Page();
-			_response.Write($"<link rel=\"stylesheet\" href=\"{page.ClientScript.GetWebResourceUrl(typeof(WebConsolePage), "Kamsar.WebConsole.Resources.console.css")}\" />");
-			_response.Write($"<script src=\"{page.ClientScript.GetWebResourceUrl(typeof(WebConsolePage), "Kamsar.WebConsole.Resources.console.js")}\"></script>");
+			_response.Write($"<link rel=\"stylesheet\" href=\"{page.ClientScript.GetWebResourceUrl(typeof(WebConsole), "Kamsar.WebConsole.Resources.console.css")}\" />");
+			_response.Write($"<script src=\"{page.ClientScript.GetWebResourceUrl(typeof(WebConsole), "Kamsar.WebConsole.Resources.console.js")}\"></script>");
 
 			_resourcesRendered = true;
 		}
@@ -150,10 +142,7 @@ namespace Kamsar.WebConsole
 			exMessage.AppendFormat("ERROR: {0} ({1})", exception.Message, exception.GetType().FullName);
 			exMessage.Append("<div class=\"stacktrace\">");
 
-			if (exception.StackTrace != null)
-				exMessage.Append(exception.StackTrace.Trim().Replace("\n", "<br />"));
-			else
-				exMessage.Append("No stack trace available.");
+			exMessage.Append(exception.StackTrace?.Trim().Replace("\n", "<br />") ?? "No stack trace available.");
 
 			exMessage.Append("</div>");
 
@@ -172,10 +161,7 @@ namespace Kamsar.WebConsole
 			exMessage.AppendFormat("{0} ({1})", innerException.Message, innerException.GetType().FullName);
 			exMessage.Append("<div class=\"stacktrace\">");
 
-			if (innerException.StackTrace != null)
-				exMessage.Append(innerException.StackTrace.Trim().Replace("\n", "<br />"));
-			else
-				exMessage.Append("No stack trace available.");
+			exMessage.Append(innerException.StackTrace?.Trim().Replace("\n", "<br />") ?? "No stack trace available.");
 
 			WriteInnerException(innerException.InnerException, exMessage);
 
@@ -209,12 +195,11 @@ namespace Kamsar.WebConsole
 
 		/// <summary>
 		/// Sets the percentage complete display, given a proportion of completeness
-		/// </summary>
+		/// </summary>B
 		public void SetProgress(long itemsProcessed, long totalItems)
 		{
 			SetProgress((int)Math.Round((itemsProcessed / (double)totalItems) * 100d));
 		}
-
 
 
 		/// <summary>
@@ -222,17 +207,48 @@ namespace Kamsar.WebConsole
 		/// </summary>
 		public virtual void WriteScript(string script)
 		{
-			_response.Write($"<script>{script}</script>");
+			if (_flushQueue.Count == 0)
+			{
+				_flushTimer.Change(500, Timeout.Infinite);
+			}
 
-			var padding = new StringBuilder("<div style=\"display: none;\">");
-			var random = new Random();
-			for (int i = script.Length; i < MinimumMessageLength; i++)
-				padding.Append((char)random.Next(33, 126));
+			_flushQueue.Enqueue(script);
+			
+		}
 
-			padding.Append("</div>");
-			_response.Write(padding);
+		protected void FlushQueue(object state)
+		{
+			var scripts = new StringBuilder();
+			string current;
+			while (_flushQueue.TryDequeue(out current))
+			{
+				scripts.AppendLine(current);
+			}
 
-			_response.Flush();
+			_response.Write($"<script>{scripts} CS.BatchComplete();</script>");
+
+			if (scripts.Length < MinimumMessageLength)
+			{
+				var padding = new StringBuilder("<div style=\"display: none;\">");
+				var random = new Random();
+				for (int i = scripts.Length; i < MinimumMessageLength; i++)
+				{
+					padding.Append((char) random.Next(33, 126));
+				}
+
+				padding.Append("</div>");
+
+				_response.Write(padding);
+			}
+
+			try
+			{
+				_response.Flush();
+			}
+			catch (HttpException)
+			{
+				// Client disconnected
+			}
 		}
 
 		/// <summary>
@@ -269,5 +285,21 @@ namespace Kamsar.WebConsole
 		{
 			SetTransientStatus(statusMessage, formatParameters);
 		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				FlushQueue(null);
+				_flushTimer?.Dispose();
+			}
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
 	}
 }
+

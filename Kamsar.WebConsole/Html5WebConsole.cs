@@ -5,6 +5,7 @@ namespace Kamsar.WebConsole
 {
 	/// <summary>
 	/// Implements a WebConsole that has a basic HTML5 page wrapper on it.
+	/// Note that this class does not require disposal if you're using the Render(Action) method.
 	/// </summary>
 	public class Html5WebConsole : WebConsole
 	{
@@ -73,6 +74,8 @@ namespace Kamsar.WebConsole
 			_response.Flush();
 
 			processAction(this);
+
+			Dispose(true);
 
 			_response.Write("</body>");
 			_response.Write("</html>");
