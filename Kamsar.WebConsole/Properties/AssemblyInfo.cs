@@ -7,6 +7,6 @@ using System.Web.UI;
 [assembly: ComVisible(false)]
 [assembly: AssemblyVersion("2.0.0")]
 [assembly: AssemblyFileVersion("2.0.0")]
-[assembly: AssemblyInformationalVersion("2.0.0-beta02")]
+[assembly: AssemblyInformationalVersion("2.0.0-pre03")]
 [assembly: WebResource("Kamsar.WebConsole.Resources.console.css", "text/css")]
 [assembly: WebResource("Kamsar.WebConsole.Resources.console.js", "text/javascript")]

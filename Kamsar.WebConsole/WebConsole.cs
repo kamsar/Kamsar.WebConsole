@@ -209,7 +209,7 @@ namespace Kamsar.WebConsole
 		/// </summary>
 		public virtual void WriteScript(string script)
 		{
-			_idleTimer.Change(1000, Timeout.Infinite);
+			_idleTimer.Change(IdlePokeDelayMsec, Timeout.Infinite);
 
 			if (_flushQueue.Count == 0)
 			{
