@@ -60,7 +60,7 @@ namespace Kamsar.WebConsole
 			_taskName = taskName;
 			_automaticTransientStatus = automaticTransientStatus;
 
-			InitializeStatus();
+			InitializeStatus();;
 		}
 
 		public virtual void Report(int percent)

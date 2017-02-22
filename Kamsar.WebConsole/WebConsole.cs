@@ -17,8 +17,13 @@ namespace Kamsar.WebConsole
 		private bool _resourcesRendered;
 		private bool _progressRendered;
 		private bool _consoleRendered;
+		// Flushes queued messages after a time to the output
 		private readonly Timer _flushTimer;
+		// Flushes a '.' to output if nothing else has been written recently to keep TCP connection alive
+		// e.g. azure kills TCP idle > 4 mins
+		private readonly Timer _idleTimer;
 		private readonly ConcurrentQueue<string> _flushQueue;
+		private const int IdlePokeDelayMsec = 30000;
 
 		public WebConsole(HttpResponseBase response, bool forceBuffer = true)
 		{
@@ -31,6 +36,7 @@ namespace Kamsar.WebConsole
 			}
 
 			_flushTimer = new Timer(FlushQueue, null, Timeout.Infinite, Timeout.Infinite);
+			_idleTimer = new Timer(arg => WriteLine("."), null, IdlePokeDelayMsec, Timeout.Infinite);
 			_flushQueue = new ConcurrentQueue<string>();
 		}
 
@@ -203,6 +209,8 @@ namespace Kamsar.WebConsole
 		/// </summary>
 		public virtual void WriteScript(string script)
 		{
+			_idleTimer.Change(1000, Timeout.Infinite);
+
 			if (_flushQueue.Count == 0)
 			{
 				_flushTimer.Change(FlushDebounceIntervalMsec, Timeout.Infinite);
@@ -221,7 +229,9 @@ namespace Kamsar.WebConsole
 				scripts.AppendLine(current);
 			}
 
-			_response.Write($"<script>{scripts} CS.BatchComplete();</script>");
+			if (scripts.Length == 0) return;
+
+			_response.Write($"<script>{scripts}CS.BatchComplete();</script>");
 
 			if (scripts.Length < MinimumMessageLength)
 			{
@@ -293,6 +303,7 @@ namespace Kamsar.WebConsole
 			{
 				FlushQueue(null);
 				_flushTimer?.Dispose();
+				_idleTimer?.Dispose();
 			}
 		}
 
