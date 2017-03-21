@@ -231,7 +231,7 @@ namespace Kamsar.WebConsole
 
 			if (scripts.Length == 0) return;
 
-			_response.Write($"<script>{scripts}CS.BatchComplete();</script>");
+			string batch = $"<script>{scripts}CS.BatchComplete();</script>";
 
 			if (scripts.Length < MinimumMessageLength)
 			{
@@ -244,16 +244,22 @@ namespace Kamsar.WebConsole
 
 				padding.Append("</div>");
 
-				_response.Write(padding);
+				batch = batch + padding;
 			}
 
 			try
 			{
+				_response.Write(batch);
 				_response.Flush();
 			}
 			catch (HttpException)
 			{
 				// Client disconnected
+			}
+			catch (Exception ex)
+			{
+				// This is on a background thread so throwing here will kill the worker process, which is naughty.
+				Trace.WriteLine($"Error flushing WebConsole!\r\n. Chances are this is not a major problem. {ex.Message}\r\n{ex.StackTrace}");
 			}
 		}
 
