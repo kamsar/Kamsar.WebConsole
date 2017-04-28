@@ -26,7 +26,7 @@ namespace Kamsar.WebConsole
 		{
 			if (!string.IsNullOrEmpty(Title))
 			{
-				_response.Write($"<title>{Title}</title>");
+				_response.Write($"<title>{HttpUtility.HtmlEncode(Title)}</title>");
 			}
 
 			RenderResources();
